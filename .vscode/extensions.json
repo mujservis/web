@@ -1,7 +1,6 @@
 {
     "recommendations": [
         "sourcegraph.cody-ai",
-        "humy2833.ftp-simple",
-        "github.remotehub"
+        "humy2833.ftp-simple"
     ]
 }
