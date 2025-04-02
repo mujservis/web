@@ -12,6 +12,6 @@
 		"project" :  {
 			"/home/zev/x/web" : {"path":"//smisek05.net/www/wp-content/themes/web", "save":true}
         },
-        "ignore" : ["/.git", "/.class"]
+        "ignore" : ["/.git", "/.vscode"]
 	}
 ]
