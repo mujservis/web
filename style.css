@@ -1,0 +1,131 @@
+/*
+Theme Name: Web
+Theme URI: https://github.com/mujservis/web
+Author: Muj Servis
+Author URI: https://mujservis.cz/
+Description: Moderní blokové téma pro WordPress 6.7 - když má mozek průjem...
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7.2
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: web
+Tags: blog, one-column, custom-background, custom-colors, custom-logo, custom-menu, editor-style, featured-images, full-site-editing, block-patterns, rtl-language-support, sticky-post, threaded-comments, translation-ready, wide-blocks, block-styles, accessibility-ready, buddypress, woocommerce
+*/
+
+/* 
+Tento soubor je potřebný pro metadata tématu, ale hlavní styly 
+budou definovány v theme.json a případně v assets/css/
+*/
+
+/* Základní reset pro konzistentní zobrazení */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #00a0d2;
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Základní layout */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Pomocné třídy */
+.text-center {
+    text-align: center;
+}
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responzivní design */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+}
+/* Styly pro stránku 404 */
+.error-404 {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.error-404 .page-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.error-404 .page-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.error-404-widgets {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 3rem;
+    text-align: left;
+}
+
+.error-404-widget {
+    flex: 0 0 100%;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .error-404-widget {
+        flex: 0 0 30%;
+    }
+}
+
+.error-404-widget h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.error-404-widget ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-404-widget li {
+    margin-bottom: 0.5rem;
+}
