@@ -31,11 +31,6 @@ get_header();
                 )
             );
 
-            // Pokud je povoleno, zobraz související příspěvky.
-            if ( function_exists( 'web_related_posts' ) ) :
-                web_related_posts();
-            endif;
-
         endwhile; // Konec smyčky.
         ?>
     </div><!-- .container -->

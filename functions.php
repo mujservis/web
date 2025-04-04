@@ -246,14 +246,6 @@ if ( class_exists( 'WooCommerce' ) ) {
 }
 
 /**
- * Zakázání CSS knihovny bloků Gutenberg
- */
-function web_disable_block_library_css() {
-    wp_dequeue_style( 'wp-block-library' );
-}
-add_action( 'wp_enqueue_scripts', 'web_disable_block_library_css', 100 );
-
-/**
  * Přidání vlastních tříd do body
  */
 function web_body_classes( $classes ) {
