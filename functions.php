@@ -120,8 +120,11 @@ function web_setup() {
     // Přidání podpory pro styly editoru.
     add_theme_support( 'editor-styles' );
 
-    // Načtení stylů editoru.
-    add_editor_style( 'assets/css/editor-style.css' );
+    // Načtení stylů editoru - kontrola, zda soubor existuje
+    $editor_style_path = get_template_directory() . '/assets/css/editor-style.css';
+    if (file_exists($editor_style_path)) {
+        add_editor_style( 'assets/css/editor-style.css' );
+    }
 }
 add_action( 'after_setup_theme', 'web_setup' );
 
@@ -144,40 +147,41 @@ add_action( 'after_setup_theme', 'web_content_width', 0 );
  */
 function web_widgets_init() {
     register_sidebar(
-    array(
-        'name'          => esc_html__( 'Patička 1', 'web' ),
-        'id'            => 'footer-1',
-        'description'   => esc_html__( 'Přidejte widgety do první oblasti patičky.', 'web' ),
-        'before_widget' => '<section id="%1$s" class="widget %2$s">',
-        'after_widget'  => '</section>',
-        'before_title'  => '<h2 class="widget-title">',
-        'after_title'   => '</h2>',
-    )
-);
+        array(
+            'name'          => esc_html__( 'Patička 1', 'web' ),
+            'id'            => 'footer-1',
+            'description'   => esc_html__( 'Přidejte widgety do první oblasti patičky.', 'web' ),
+            'before_widget' => '<section id="%1$s" class="widget %2$s">',
+            'after_widget'  => '</section>',
+            'before_title'  => '<h2 class="widget-title">',
+            'after_title'   => '</h2>',
+        )
+    );
 
-register_sidebar(
-    array(
-        'name'          => esc_html__( 'Patička 2', 'web' ),
-        'id'            => 'footer-2',
-        'description'   => esc_html__( 'Přidejte widgety do druhé oblasti patičky.', 'web' ),
-        'before_widget' => '<section id="%1$s" class="widget %2$s">',
-        'after_widget'  => '</section>',
-        'before_title'  => '<h2 class="widget-title">',
-        'after_title'   => '</h2>',
-    )
-);
+    register_sidebar(
+        array(
+            'name'          => esc_html__( 'Patička 2', 'web' ),
+            'id'            => 'footer-2',
+            'description'   => esc_html__( 'Přidejte widgety do druhé oblasti patičky.', 'web' ),
+            'before_widget' => '<section id="%1$s" class="widget %2$s">',
+            'after_widget'  => '</section>',
+            'before_title'  => '<h2 class="widget-title">',
+            'after_title'   => '</h2>',
+        )
+    );
 
-register_sidebar(
-    array(
-        'name'          => esc_html__( 'Patička 3', 'web' ),
-        'id'            => 'footer-3',
-        'description'   => esc_html__( 'Přidejte widgety do třetí oblasti patičky.', 'web' ),
-        'before_widget' => '<section id="%1$s" class="widget %2$s">',
-        'after_widget'  => '</section>',
-        'before_title'  => '<h2 class="widget-title">',
-        'after_title'   => '</h2>',
-    )
-);
+    register_sidebar(
+        array(
+            'name'          => esc_html__( 'Patička 3', 'web' ),
+            'id'            => 'footer-3',
+            'description'   => esc_html__( 'Přidejte widgety do třetí oblasti patičky.', 'web' ),
+            'before_widget' => '<section id="%1$s" class="widget %2$s">',
+            'after_widget'  => '</section>',
+            'before_title'  => '<h2 class="widget-title">',
+            'after_title'   => '</h2>',
+        )
+    );
+    
     register_sidebar(
         array(
             'name'          => esc_html__( 'Postranní panel', 'web' ),
@@ -199,11 +203,23 @@ function web_scripts() {
     // Načtení hlavního stylopisu
     wp_enqueue_style( 'web-style', get_stylesheet_uri(), array(), WEB_VERSION );
     
-    // Načtení vlastního CSS
-    wp_enqueue_style( 'web-main', get_template_directory_uri() . '/assets/css/main.css', array(), WEB_VERSION );
+    // Kontrola, zda soubor main.css existuje
+    $main_css_path = get_template_directory() . '/assets/css/main.css';
+    if (file_exists($main_css_path)) {
+        wp_enqueue_style( 'web-main', get_template_directory_uri() . '/assets/css/main.css', array(), WEB_VERSION );
+    }
     
-    // Načtení vlastního JavaScriptu
-    wp_enqueue_script( 'web-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), WEB_VERSION, true );
+    // Načtení JavaScriptu pro navigaci - kontrola, zda soubor existuje
+    $navigation_js_path = get_template_directory() . '/assets/js/navigation.js';
+    if (file_exists($navigation_js_path)) {
+        wp_enqueue_script( 'web-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), WEB_VERSION, true );
+    }
+    
+    // Načtení hlavního JavaScriptu - kontrola, zda soubor existuje
+    $main_js_path = get_template_directory() . '/assets/js/main.js';
+    if (file_exists($main_js_path)) {
+        wp_enqueue_script( 'web-main', get_template_directory_uri() . '/assets/js/main.js', array(), WEB_VERSION, true );
+    }
 
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
@@ -212,37 +228,67 @@ function web_scripts() {
 add_action( 'wp_enqueue_scripts', 'web_scripts' );
 
 /**
+ * Implementace podmíněného načítání postranního panelu.
+ */
+function web_maybe_load_sidebar() {
+    // Kontrola, zda aktuální šablona není bez postranního panelu
+    $template = get_page_template_slug();
+    
+    if ($template !== 'page-no-sidebar.php' && $template !== 'single-no-sidebar.php' && $template !== 'page-full-width.php') {
+        get_sidebar();
+    }
+}
+
+/**
  * Vlastní šablonové značky pro toto téma.
  */
-require get_template_directory() . '/inc/template-tags.php';
+$template_tags_path = get_template_directory() . '/inc/template-tags.php';
+if (file_exists($template_tags_path)) {
+    require $template_tags_path;
+}
 
 /**
  * Funkce, které vylepšují téma napojením do WordPressu.
  */
-require get_template_directory() . '/inc/template-functions.php';
+$template_functions_path = get_template_directory() . '/inc/template-functions.php';
+if (file_exists($template_functions_path)) {
+    require $template_functions_path;
+}
 
 /**
  * Přídavky do přizpůsobovače.
  */
-require get_template_directory() . '/inc/customizer.php';
+$customizer_path = get_template_directory() . '/inc/customizer.php';
+if (file_exists($customizer_path)) {
+    require $customizer_path;
+}
 
 /**
  * Blokové vzory.
  */
-require get_template_directory() . '/inc/block-patterns.php';
+$block_patterns_path = get_template_directory() . '/inc/block-patterns.php';
+if (file_exists($block_patterns_path)) {
+    require $block_patterns_path;
+}
 
 /**
  * Načtení souboru kompatibility s Jetpack.
  */
 if ( defined( 'JETPACK__VERSION' ) ) {
-    require get_template_directory() . '/inc/jetpack.php';
+    $jetpack_path = get_template_directory() . '/inc/jetpack.php';
+    if (file_exists($jetpack_path)) {
+        require $jetpack_path;
+    }
 }
 
 /**
  * Načtení souboru kompatibility s WooCommerce.
  */
 if ( class_exists( 'WooCommerce' ) ) {
-    require get_template_directory() . '/inc/woocommerce.php';
+    $woocommerce_path = get_template_directory() . '/inc/woocommerce.php';
+    if (file_exists($woocommerce_path)) {
+        require $woocommerce_path;
+    }
 }
 
 /**
@@ -258,6 +304,12 @@ function web_body_classes( $classes ) {
     if ( get_background_image() || get_background_color() !== 'ffffff' ) {
         $classes[] = 'has-custom-background';
     }
+    
+    // Přidání třídy pro šablonu stránky
+    $template = get_page_template_slug();
+    if ($template) {
+        $classes[] = 'template-' . sanitize_html_class(str_replace('.php', '', $template));
+    }
 
     return $classes;
 }
@@ -272,3 +324,22 @@ function web_pingback_header() {
     }
 }
 add_action( 'wp_head', 'web_pingback_header' );
+
+/**
+ * Optimalizace dotazů pro zlepšení výkonu.
+ */
+function web_optimize_queries() {
+    if (!is_admin()) {
+        // Odstranění zbytečných dotazů
+        remove_action('wp_head', 'wp_generator');
+        remove_action('wp_head', 'wlwmanifest_link');
+        remove_action('wp_head', 'rsd_link');
+        remove_action('wp_head', 'wp_shortlink_wp_head');
+        remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10);
+        
+        // Odstranění emoji skriptů a stylů
+        remove_action('wp_head', 'print_emoji_detection_script', 7);
+        remove_action('wp_print_styles', 'print_emoji_styles');
+    }
+}
+add_action('init', 'web_optimize_queries');
